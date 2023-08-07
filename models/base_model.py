@@ -7,14 +7,28 @@ from datetime import datetime
 class BaseModel:
     """Base model class to instantiate the foundationa Airbnb data unit(s)"""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         Initiate an instance of the base model
+        Arguments:
+            @args: Variable arguments passed (non named)
+            @kwargs: Variable namd arguments
         """
-        self.id = str(uuid.uuid4())
-        current_time = datetime.utcnow()
-        self.created_at = current_time
-        self.updated_at = current_time
+        kw_keys = list(kwargs.keys())
+        fmt = "%Y-%m-%dT%H:%M:%S.%f"
+        if "__class__" in kw_keys:
+            kw_keys.remove("__class__")
+        if (len(kw_keys) > 0):
+            for key in kw_keys:
+                if key in ["created_at", "updated_at"]:
+                    setattr(self, key, datetime.strptime(kwargs[key], fmt))
+                else:
+                    setattr(self, key, kwargs[key])
+        else:
+            self.id = str(uuid.uuid4())
+            current_time = datetime.utcnow()
+            self.created_at = current_time
+            self.updated_at = current_time
 
     def __str__(self):
         """Specify the output of printing a class instance"""
