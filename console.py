@@ -5,9 +5,22 @@ import models
 import shlex
 from models import storage
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
-
-vcs = ['BaseModel', 'User']
+vcs = [
+    'BaseModel',
+    'User',
+    'State',
+    'City',
+    'Place',
+    'Amenity',
+    'Review'
+]
 
 
 class HBNBCommand(cmd.Cmd):
@@ -34,9 +47,10 @@ class HBNBCommand(cmd.Cmd):
         elif arg_list[0] not in vcs:
             print("** class doesn't exist **")
         else:
-            base_instance = BaseModel()
-            base_instance.save()
-            print(base_instance.id)
+            class_val = globals()[arg_list[0]]
+            class_instance = class_val()
+            class_instance.save()
+            print(class_instance.id)
 
     def do_show(self, args):
         """Prints the string representation of an instance"""
@@ -84,7 +98,7 @@ class HBNBCommand(cmd.Cmd):
             if has_cls:
                 f = filter(lambda x: x.__class__.__name__ == arg_list[0], ob)
                 obj_sl = list(map(lambda x: x.__str__(), f))
-            elif len(argl) == 0:
+            elif len(arg_list) == 0:
                 obj_sl = list(map(lambda x: x.__str__(), ob))
             print(obj_sl)
 
