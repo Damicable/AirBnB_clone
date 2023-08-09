@@ -7,6 +7,9 @@ from models import storage
 from models.base_model import BaseModel
 
 
+vcs = ['BaseModel', 'User']
+
+
 class HBNBCommand(cmd.Cmd):
     """HBNB command class"""
     prompt = '(hbnb) '
@@ -28,7 +31,7 @@ class HBNBCommand(cmd.Cmd):
         arg_list = shlex.split(args)
         if len(arg_list) == 0:
             print("** class name missing **")
-        elif arg_list[0] != 'BaseModel':
+        elif arg_list[0] not in vcs:
             print("** class doesn't exist **")
         else:
             base_instance = BaseModel()
@@ -40,7 +43,7 @@ class HBNBCommand(cmd.Cmd):
         arg_list = shlex.split(args)
         if len(arg_list) == 0:
             print("** class name missing **")
-        elif arg_list[0] != 'BaseModel':
+        elif arg_list[0] not in vcs:
             print("** class doesn't exist **")
         elif len(arg_list) < 2:
             print("** instance id missing **")
@@ -57,7 +60,7 @@ class HBNBCommand(cmd.Cmd):
         arg_list = shlex.split(args)
         if len(arg_list) == 0:
             print("** class name missing **")
-        elif arg_list[0] != 'BaseModel':
+        elif arg_list[0] not in vcs:
             print("** class doesn't exist **")
         elif len(arg_list) < 2:
             print("** instance id missing **")
@@ -73,8 +76,8 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """Displays a string representation of all instances"""
         arg_list = shlex.split(args)
-        has_cls = len(arg_list) > 0 and arg_list[0] == 'BaseModel'
-        if len(arg_list) > 0 and arg_list[0] != 'BaseModel':
+        has_cls = len(arg_list) > 0 and arg_list[0] in vcs
+        if len(arg_list) > 0 and arg_list[0] not in vcs:
             print("** class doesn't exist **")
         else:
             ob = list(storage.all().values())
@@ -91,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
         if len(arg_list) == 0:
             print("** class name missing **")
             return False
-        if arg_list[0] != 'BaseModel':
+        if arg_list[0] not in vcs:
             print("** class doesn't exist **")
             return False
         if len(arg_list) < 2:
