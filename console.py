@@ -77,12 +77,12 @@ class HBNBCommand(cmd.Cmd):
         if len(arg_list) > 0 and arg_list[0] != 'BaseModel':
             print("** class doesn't exist **")
         else:
-            obj_l = list(storage.all().values())
+            ob = list(storage.all().values())
             if has_cls:
-                fltd = filter(lambda x: x.__class__.__name__ == arg_list[0], obj_l)
-                obj_sl = list(map(lambda x: x.__str__(), fltd))
+                f = filter(lambda x: x.__class__.__name__ == arg_list[0], ob)
+                obj_sl = list(map(lambda x: x.__str__(), f))
             elif len(argl) == 0:
-                obj_sl = list(map(lambda x: x.__str__(), obj_l))
+                obj_sl = list(map(lambda x: x.__str__(), ob))
             print(obj_sl)
 
     def do_update(self, args):
