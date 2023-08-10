@@ -27,6 +27,29 @@ class HBNBCommand(cmd.Cmd):
     """HBNB command class"""
     prompt = '(hbnb) '
 
+    def default(self, arg):
+        """Default behavior to handle Class.method commands"""
+        exec_dict = {
+            "all": self.do_all,
+            "count": self.do_count,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "update": self.do_update
+        }
+        if "." in arg and arg.endswith(")"):
+            cmds1 = arg.split(".")
+            cmds2 = cmds1[1].split("(")
+            cmd_args = cmds1[0]
+            if len(cmds2[1]) > 1:
+                xtra_args = cmds2[1][:-1].split(',')
+                cmd_args += " "
+                for i in xtra_args:
+                    cmd_args += i
+            return exec_dict[cmds2[0]](cmd_args)
+
+        print("*** Unknown syntax: {}".format(arg))
+        return False
+
     def do_EOF(self, arg):
         """Exit the console on end of file"""
         return True
@@ -68,6 +91,20 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
             else:
                 print(saved_instances[inst_key])
+
+    def do_count(self, args):
+        """Counts the number of instances of a particular class"""
+        arg_list = shlex.split(args)
+        if len(arg_list) == 0:
+            print("** class name missing **")
+        elif arg_list[0] not in vcs:
+            print("** class doesn't exist **")
+        saved_instances = storage.all()
+        num = 0
+        for i in list(saved_instances.keys()):
+            if i.startswith(arg_list[0]):
+                num += 1
+        print(num)
 
     def do_destroy(self, args):
         """Deletes a created instance by class name"""
