@@ -3,6 +3,7 @@
 import cmd
 import models
 import shlex
+import re
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
@@ -23,6 +24,20 @@ vcs = [
 ]
 
 
+def strip_key(k):
+    """Extract argument value"""
+    prtn = re.search(r'[a-zA-Z]+.*[a-zA-Z]', k)
+    if prtn:
+        return prtn.group()
+    else:
+        return ""
+
+
+def strip_val(v):
+    """Stip value string"""
+    return v.strip().strip('"').strip("'").strip('}')
+
+
 class HBNBCommand(cmd.Cmd):
     """HBNB command class"""
     prompt = '(hbnb) '
@@ -36,17 +51,31 @@ class HBNBCommand(cmd.Cmd):
             "destroy": self.do_destroy,
             "update": self.do_update
         }
-        if "." in arg and arg.endswith(")"):
-            cmds1 = arg.split(".")
-            cmds2 = cmds1[1].split("(")
-            cmd_args = cmds1[0]
-            if len(cmds2[1]) > 1:
-                xtra_args = cmds2[1][:-1].split(',')
-                cmd_args += " "
-                for i in xtra_args:
-                    cmd_args += i
-            return exec_dict[cmds2[0]](cmd_args)
-
+        try:
+            if "." in arg and arg.endswith(")"):
+                cmds1 = arg.split(".")
+                cmds2 = cmds1[1].split("(")
+                cmd_args = cmds1[0]
+                if len(cmds2[1]) > 1:
+                    xtra_args = cmds2[1][:-1].split(',')
+                    cmd_args += " "
+                    cmd_args += xtra_args[0] + " "
+                    if len(xtra_args) > 1 and '{' in xtra_args[1]:
+                        cnt = 0
+                        for k in xtra_args[1:]:
+                            if cnt != 0:
+                                cmd_args += " "
+                            sep = k.split(':')
+                            cmd_args += strip_key(sep[0])
+                            cmd_args += " "
+                            cmd_args += strip_val(sep[1])
+                            cnt += 1
+                    else:
+                        for i in xtra_args:
+                            cmd_args += i
+                return exec_dict[cmds2[0]](cmd_args)
+        except (AttributeError, IndexError, KeyError):
+            pass
         print("*** Unknown syntax: {}".format(arg))
         return False
 
@@ -163,7 +192,7 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return False
         targ = saved_instances[inst_key]
-        if len(arg_list) == 4:
+        if len(arg_list) >= 4:
             if arg_list[2] in targ.__class__.__dict__.keys():
                 updtype = type(targ.__class__.__dict__[arg_list[2]])
                 targ.__dict__[arg_list[2]] = updtype(arg_list[3])
