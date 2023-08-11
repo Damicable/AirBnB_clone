@@ -6,6 +6,7 @@ from datetime import datetime
 from time import sleep
 from models.engine.file_storage import FileStorage
 
+
 class test_FileStorage(unittest.TestCase):
     """This tests the FileStorage class"""
 
@@ -20,6 +21,7 @@ class test_FileStorage(unittest.TestCase):
         self.assertIsNotNone(FileStorage.new)
         self.assertIsNotNone(FileStorage.save)
         self.assertIsNotNone(FileStorage.reload)
+
 
 if __name__ == '__main__':
     unittest.main()
