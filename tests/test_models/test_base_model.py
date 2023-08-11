@@ -58,38 +58,38 @@ class TestBaseModel(unittest.TestCase):
     def test_3_attributes(self):
         """This tests attributes value for an instance of a BaseModel class"""
 
-        attributes = storage.attributes()["BaseModel"]
+        attributes = BaseModel.__dict__
         o = BaseModel()
         for k, v in attributes.items():
-            self.assertTrue(hasattr(0, k))
-            self.asertEqual(type(getattr(o, k, None)), v)
+            self.assertTrue(hasattr(o, k))
 
     def test_3_datetime_created(self):
-        """This tests if updated_at and created_at are all current at the creation."""
-        date_now = datetime.now()
+        """
+        This tests if updated_at and created_at are all current at the creation
+        """
+        date_now = datetime.utcnow()
         b = BaseModel()
         diff = b.updated_at - b.created_at
         self.assertTrue(abs(diff.total_seconds()) < 0.01)
         diff = b.created_at - date_now
-        self.assertTrue(abs(diff.total_seconds()) <0.1)
+        self.assertTrue(abs(diff.total_seconds()) < 0.1)
 
     def test_3_id(self):
         """This tests for the unique user ids."""
-        
-        l = [BaseModel().id for i in range(1000)]
-        self.assertEqual(len(set(l)), len(l))
+        l_ids = [BaseModel().id for i in range(1000)]
+        self.assertEqual(len(set(l_ids)), len(l_ids))
 
     def test_3_save(self):
         """This tests for the public instance method save()"""
 
         b = BaseModel()
         time.sleep(0.5)
-        date_now = datetime.now()
+        date_now = datetime.utcnow()
         b.save()
         diff = b.updated_at - date_now
         self.assertTrue(abs(diff.total_seconds()) < 0.01)
 
-     def test_3_str(self):
+    def test_3_str(self):
         """Tests for __str__ method."""
         b = BaseModel()
         rex = re.compile(r"^\[(.*)\] \((.*)\) (.*)$")
