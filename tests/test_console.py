@@ -22,7 +22,9 @@ from unittest.mock import patch
 
 
 class TestHBNBCommand_prompting(unittest.TestCase):
-    """This is a unittests for testing prompting of the HBNB command interpreter."""
+    """
+    This is a unittests for testing prompting of the HBNB command interpreter
+    """
 
     def test_prompt_string(self):
         self.assertEqual("(hbnb) ", HBNBCommand.prompt)
@@ -34,7 +36,10 @@ class TestHBNBCommand_prompting(unittest.TestCase):
 
 
 class TestHBNBCommand_help(unittest.TestCase):
-    """This is a unittests for testing help messages of the HBNB command interpreter."""
+    """
+    This is a unittests for testing help messages of the
+    HBNB command interpreter
+    """
 
     def test_help_quit(self):
         h = "Quit command to exit the program."
@@ -1404,6 +1409,7 @@ class TestHBNBCommand_update(unittest.TestCase):
         testCmd += "{'attr_name': 'attr_value'})"
         HBNBCommand().onecmd(testCmd)
         test_dict = storage.all()["BaseModel.{}".format(testId)].__dict__
+        print(test_dict, "test_dict")
         self.assertEqual("attr_value", test_dict["attr_name"])
 
         with patch("sys.stdout", new=StringIO()) as output:

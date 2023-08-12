@@ -12,6 +12,7 @@ import json
 import os
 import re
 
+
 class TestCity(unittest.TestCase):
 
     """Test cases for the City class"""
@@ -41,6 +42,7 @@ class TestCity(unittest.TestCase):
         for k, v in attributes.items():
             self.assertTrue(hasattr(o, k))
             self.assertEqual(type(getattr(o, k, None)), v)
+
 
 if __name__ == "__main__":
     unittest.main()
