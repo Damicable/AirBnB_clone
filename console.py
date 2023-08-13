@@ -92,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """Create a base model instance"""
+        """Create a new class instance and print its id"""
         arg_list = shlex.split(args)
         if len(arg_list) == 0:
             print("** class name missing **")
