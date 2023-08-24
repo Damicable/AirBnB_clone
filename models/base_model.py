@@ -2,6 +2,7 @@
 """A module that creates the base model dfining common attributes/methods"""
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel:
@@ -29,6 +30,7 @@ class BaseModel:
             current_time = datetime.utcnow()
             self.created_at = current_time
             self.updated_at = current_time
+            models.storage.new(self)
 
     def __str__(self):
         """Specify the output of printing a class instance"""
@@ -40,6 +42,7 @@ class BaseModel:
         An instant method to update the public instane attribute created_at
         """
         self.updated_at = datetime.utcnow()
+        models.storage.save()
 
     def to_dict(self):
         """Serialize the dict representation of a class instance to json"""
